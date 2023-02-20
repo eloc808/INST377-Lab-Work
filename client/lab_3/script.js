@@ -7,7 +7,7 @@
 */
 /* eslint-enable max-len */
 // set our first slide's position to "0", the opening position in an array
-const slidePosition = 0;
+let slidePosition = 0;
 
 // gather a reference to every slide we're using via the class name and querySelectorAll
 const slides = document.querySelectorAll('.carousel_item');
@@ -23,7 +23,8 @@ function updateSlidePosition() {
     slide.classList.remove('visible');
     slide.classList.add('hidden');
   });
- 
+  
+  console.log(slidePosition);
   slides[slidePosition].classList.add('visible');
 }
 
@@ -34,6 +35,11 @@ function moveToNextSlide() {
     and if so, sets your slidePosition to the first index of an array
     if not, set the slidePosition to the current position plus one
   */
+  if(slidePosition === totalSlides - 1){
+    slidePosition = 0;
+  } else {
+    slidePosition += 1;
+  }
   updateSlidePosition(); // this is how you call a function within a function
 }
 function moveToPrevSlide() {
@@ -44,6 +50,11 @@ function moveToPrevSlide() {
     and if so, sets your slidePosition to the last slide position in totalSlides
     if not, set the slidePosition to the current position minus one
   */
+    if(slidePosition === 0){
+      slidePosition = totalSlides - 1;
+    } else {
+      slidePosition -= 1;
+    }
   updateSlidePosition();
 }
 
@@ -57,5 +68,10 @@ document.querySelector('.next') // Get the appropriate element (<button class="n
     moveToNextSlide(); // call the function above to handle this
   });
 
+document.querySelector('.prev')
+  .addEventListener('click', () => {
+    console.log('clicked prev');
+    moveToNextSlide();
+  });  
 // Paying close attention to the above queryselector, write one that fires
 // when you want a "prev" slide
