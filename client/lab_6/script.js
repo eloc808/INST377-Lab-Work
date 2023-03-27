@@ -20,56 +20,6 @@ function injectHTML(list) {
   })
 }
 
-function cutRestaurantList(list) {
-
-  console.log('fired cut list');
-  const range = [...Array(15).keys()];
-  return newArray = range.map((item) => {
-    const index = getRandomIntInclusive(0, list.length - 1);
-    return list[index]
-  })
-}
-
-/*
-  Hook this script to index.html
-  by adding `<script src="script.js">` just before your closing `</body>` tag
-*/
-
-/* A quick filter that will return something based on a matching input */
-function filterList(list, query) {
-  return list.filter((item) => {
-    const lowerCaseName = item.name.toLowerCase();
-    const lowerCaseQuery = query.toLowerCase();
-    return lowerCaseName.includes(lowerCaseQuery);
-  })
-}
-
-function getRandomIntInclusive(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-function injectHTML(list) {
-  console.log('fired injectHTML')
-  const target = document.querySelector('#restaurant_list');
-  target.innerHTML = '';
-  list.forEach((item) => {
-    const str = `<li>${item.name}</li>`;
-    target.innerHTML += str
-  })
-} 
-
-function cutRestaurantList(list) {
-  console.log('fired cut list');
-  const range = [...Array(15).keys()];
-  return newArray = range.map((item) => {
-    const index = getRandomIntInclusive(0, list.length - 1);
-    return list[index]
-  })
-}
-
-
 /* A quick filter that will return something based on a matching input */
 function filterList(list, query) {
 
@@ -80,9 +30,18 @@ function filterList(list, query) {
   })
 }
 
+function cutRestaurantList(list) {
+  console.log('fired cut list');
+  const range = [...Array(15).keys()];
+  return newArray = range.map((item) => {
+    const index = getRandomIntInclusive(0, list.length - 1);
+    return list[index]
+  })
+}
+
 async function mainEvent() { // the async keyword means we can make API requests
   const mainForm = document.querySelector('.main_form'); // This class name needs to be set on your form before you can listen for an event on it
-  const filterButton = document.querySelector('#filter')
+  const filterDataButton = document.querySelector('#filter')
   const loadDataButton = document.querySelector('#data_load')
   const generateListButton = document.querySelector('#generate')
 
@@ -91,7 +50,7 @@ async function mainEvent() { // the async keyword means we can make API requests
   // Add a querySelector that targets your filter button here
 
   let currentList = []; // this is "scoped" to the main event function
-  
+
   /* We need to listen to an "event" to have something happen in our page - here we're listening for a "submit" */
   loadDataButton.addEventListener('click', async (submitEvent) => { 
     console.log('Loading Data..'); 
@@ -104,8 +63,8 @@ async function mainEvent() { // the async keyword means we can make API requests
     console.table(currentList);
   });
 
-  filterButton.addEventListener('click', (event) => {
-    console.log('clicked FilterButton');
+  filterDataButton.addEventListener('click', (event) => {
+    console.log('Clicked filterButton');
 
     const formData = new FormData(mainForm);
     const formProps = Object.fromEntries(formData);
@@ -120,25 +79,8 @@ async function mainEvent() { // the async keyword means we can make API requests
   generateListButton.addEventListener('click', (event) => {
     console.log('generate new list');
     const restaurantsList = cutRestaurantList(currentList);
-    console.log(restaurantList);
-    injectHTML(restaurantList)
+    console.log(restaurantsList);
+    injectHTML(restaurantsList)
   })
-  /*
-    Now that you HAVE a list loaded, write an event listener set to your filter button
-    it should use the 'new FormData(target-form)' method to read the contents of your main form
-    and the Object.fromEntries() method to convert that data to an object we can work with
-
-    When you have the contents of the form, use the placeholder at line 7
-    to write a list filter
-
-    Fire it here and filter for the word "pizza"
-    you should get approximately 46 results
-  */
-}
-
-/*
-  This adds an event listener that fires our main event only once our page elements have loaded
-  The use of the async keyword means we can "await" events before continuing in our scripts
-  In this case, we load some data when the form has submitted
-*/
+  
 document.addEventListener('DOMContentLoaded', async () => mainEvent()); // the async keyword means we can make API requests
