@@ -14,9 +14,7 @@
         <div class="container">
             <div class="left_section box">
                 <h2>Form Inputs</h2>
-                <form 
-          action= 'https://data.princegeorgescountymd.gov/resource/umjn-t2iz.json' 
-                class="box main_form">
+                <form action= 'https://data.princegeorgescountymd.gov/resource/umjn-t2iz.json' class="box main_form">
                 <button type="button" id="data_load">Load County Data</button>
                 <div>
                     <label for="resto">Restaurant Name</label>
@@ -24,16 +22,16 @@
                 </div>
                     <button type="button" id="filter">Filter Data</button>
                     <button type="button" id="generate">Generate List</button>
-          </form>
+                </form>
+            </div>
+            <div class="right_section box">
+                <h2>Local Restaurants</h2>
+                <ol class="box" id="restuarant_list">
+                    A list of local restaurants
+                </ol>
+                <div class="lds-ellipsis" id='data_load_animation'><div></div><div></div><div></div><div></div></div>
+            </div>
         </div>
-        <div class="right_section box">
-            <h2>Local Restaurants</h2>
-            <ol class="box" id="restuarant_list">
-                A list of local restaurants
-            </ol>
-            <div class="lds-ellipsis" id='data_load_animation'><div></div><div></div><div></div><div></div></div>
-        </div>
-    </div>
     <footer class="footer">
         eloc808 <a href="http://github.com/eloc808" target="_blank" rel="noopener noreferrer">GitHub</a>
     </footer>

@@ -33,7 +33,7 @@ function cutRestaurantList(list) {
   })
 }
 
-async function mainEvent() { // the async keyword means we can make API requests
+async function mainEvent() {  // the async keyword means we can make API requests
   const mainForm = document.querySelector('.main_form'); // This class name needs to be set on your form before you can listen for an event on it
   const filterDataButton = document.querySelector('#filter')
   const loadDataButton = document.querySelector('#data_load')
@@ -76,5 +76,5 @@ async function mainEvent() { // the async keyword means we can make API requests
     console.log(restaurantsList);
     injectHTML(restaurantsList)
   })
-  
+}
 document.addEventListener('DOMContentLoaded', async () => mainEvent()); // the async keyword means we can make API requests
