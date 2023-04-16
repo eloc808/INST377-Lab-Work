@@ -33,16 +33,44 @@ function getRandomIntInclusive(min, max) {
     })
   }
   
+  function initMap() {
+    const carto = L.map('map').setView([38.90, -76.93], 13);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(carto);
+    return carto;
+  }
+
+  function markerPlace(array, map) {
+    console.log('array for makrers', array);
+
+    map.eachLayer((layer) => {
+        if (layer instanceof L.Marker) {
+          layer.remove();
+        }
+      });
+
+    array.forEach((item) => {
+        console.log('markerPlace', item);
+        const {coordinates} = item.geocodeed_column_1;
+        L.marker([coordinates[1], coordinates[0]]).addTo(map);
+    })
+  }
+
   async function mainEvent() {  // the async keyword means we can make API requests
     const mainForm = document.querySelector('.main_form'); // This class name needs to be set on your form before you can listen for an event on it
     // const filterDataButton = document.querySelector('#filter')
     const loadDataButton = document.querySelector('#data_load')
+    const clearDataButton = document.querySelector('#data_clear')
     const generateListButton = document.querySelector('#generate')
     const textField = document.querySelector('#resto')
 
     const loadAnimation = document.querySelector('#data_load_animation');
     loadAnimation.style.display = 'none';
     generateListButton.classList.remove('hidden');
+
+    const initMap();
 
     const storedData = localStorage.getItem('storedData');
     const parsedData = JSON.parse(storedData);
@@ -59,9 +87,13 @@ function getRandomIntInclusive(min, max) {
   
       const storedList = await results.json();
       localStorage.setItem('storedData', JSON.stringify(storedList));
-      if (storedList.length > 0) {
+      parsedData = storedList;
+
+      
+      if (parsedData?.length > 0) {
         generateListButton.classList.remove('hidden');
       }
+
       loadAnimation.style.display = 'none';
     //   console.table(storedList);
     });
@@ -82,11 +114,12 @@ function getRandomIntInclusive(min, max) {
     generateListButton.addEventListener('click', (event) => {
       console.log('generate new list');
       const recallList = localStorage.getItem('storedData');
-      const storedList = JSON.parse(recallList)
+      let storedList = JSON.parse(recallList)
 
       currentList = cutRestaurantList(storedList);
       console.log(currentList);
-      injectHTML(currentList)
+      injectHTML(currentList);
+      markerPlace(currentList, carto);
     })
 
     textField.addEventListener('input', (event) => {
@@ -94,6 +127,13 @@ function getRandomIntInclusive(min, max) {
         const newList = filterList(currentList, event.target.value);
         console.log(newList);
         injectList(newList);
+        markerPlace(newList, carto);
+    })
+
+    clearDataButton.addEventListener("click", (event) => {
+        console.log('clear browser data')
+        localStorage.clear();
+        console.log('localStorage Check', localStorage.getItem("storedData"))
     })
   }
   document.addEventListener('DOMContentLoaded', async () => mainEvent()); // the async keyword means we can make API requests
