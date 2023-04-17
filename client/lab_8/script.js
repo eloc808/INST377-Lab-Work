@@ -17,7 +17,7 @@ function getRandomIntInclusive(min, max) {
   /* A quick filter that will return something based on a matching input */
   function filterList(list, query) {
   
-    return list.filter( (item) => {
+    return list.filter((item) => {
       const lowerCaseName = item.name.toLowerCase();
       const lowerCaseQuery = query.toLowerCase();
       return lowerCaseName.includes(lowerCaseQuery)
@@ -27,23 +27,23 @@ function getRandomIntInclusive(min, max) {
   function cutRestaurantList(list) {
     console.log('fired cut list');
     const range = [...Array(15).keys()];
-    return newArray = range.map((item) => {
+    return (newArray = range.map((item) => {
       const index = getRandomIntInclusive(0, list.length - 1);
       return list[index]
-    })
+    }))
   }
   
   function initMap() {
-    const carto = L.map('map').setView([38.90, -76.93], 13);
+    const carto = L.map('map').setView([38.98, -76.93], 13);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      maxZoom: 19,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(carto);
     return carto;
   }
 
   function markerPlace(array, map) {
-    console.log('array for makrers', array);
+    console.log('array for markers', array);
 
     map.eachLayer((layer) => {
         if (layer instanceof L.Marker) {
@@ -53,9 +53,9 @@ function getRandomIntInclusive(min, max) {
 
     array.forEach((item) => {
         console.log('markerPlace', item);
-        const {coordinates} = item.geocodeed_column_1;
+        const {coordinates} = item.geocoded_column_1;
         L.marker([coordinates[1], coordinates[0]]).addTo(map);
-    })
+    });
   }
 
   async function mainEvent() {  // the async keyword means we can make API requests
@@ -68,13 +68,16 @@ function getRandomIntInclusive(min, max) {
 
     const loadAnimation = document.querySelector('#data_load_animation');
     loadAnimation.style.display = 'none';
-    generateListButton.classList.remove('hidden');
+    generateListButton.classList.add('hidden');
 
-    const initMap();
+    const carto = initMap();
 
     const storedData = localStorage.getItem('storedData');
-    const parsedData = JSON.parse(storedData);
-  
+    let parsedData = JSON.parse(storedData);
+    if (parsedData?.length > 0) {
+      generateListButton.classList.remove('hidden');
+    }
+
     // let storedList = [];
     let currentList = []; // this is "scoped" to the main event function
   
@@ -113,10 +116,7 @@ function getRandomIntInclusive(min, max) {
   
     generateListButton.addEventListener('click', (event) => {
       console.log('generate new list');
-      const recallList = localStorage.getItem('storedData');
-      let storedList = JSON.parse(recallList)
-
-      currentList = cutRestaurantList(storedList);
+      currentList = cutRestaurantList(parsedData);
       console.log(currentList);
       injectHTML(currentList);
       markerPlace(currentList, carto);
@@ -126,7 +126,7 @@ function getRandomIntInclusive(min, max) {
         console.log('input', event.target.value);
         const newList = filterList(currentList, event.target.value);
         console.log(newList);
-        injectList(newList);
+        injectHTML(newList);
         markerPlace(newList, carto);
     })
 
